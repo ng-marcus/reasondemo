@@ -1,0 +1,24 @@
+[%bs.raw {|require('./app.css')|}];
+
+external logo : string = "./logo.svg" [@@bs.module];
+
+let component = ReasonReact.statelessComponent "SimpleApp";
+
+let make route::(route: Types.routes) ::router _children => {
+  ...component,
+  render: fun self => {
+    let loggedIn token => DirectorRe.setRoute router "/";
+    let showServers client_id =>
+      DirectorRe.setRoute router ("/clients" ^ client_id ^ "/servers");
+    let element =
+      switch route {
+      | LoginRoute => <Login loggedIn />
+      | ClientsRoute => <Clients clients=[] showServers />
+      | ServersRoute client_id => <Servers servers=[] client_id />
+      };
+    <div className="App">
+      <h2> (ReasonReact.stringToElement "Simple App") </h2>
+      element
+    </div>
+  }
+};
